@@ -35,6 +35,18 @@ function validatePassword(password: string) {
   return false;
 }
 
+function validateForm(username: string, email: string, password: string, confirmpassword: string) {
+  const errors: any = [];
+  if (password !== confirmpassword) {
+    errors.push('Passwords don\'t match.');
+  }
+  if (username && email && password && confirmpassword) {
+    errors.push('Please fill in empty fields.')
+  }
+  errors.concat(validatePassword(password));
+  return errors;
+}
+
 export const GetLogin = (req: Request, res: Response) => {
   return res.render('account/login')
 }
@@ -50,16 +62,12 @@ export const PostLogin = (req: Request, res: Response) => {
 export const PostRegister = (req: Request, res: Response) => {
   const username = req.body.username,
     email = req.body.email,
-    password = req.body.password
-  if (password !== req.body.confirmpassword) {
-    return res.status(401).json({
-      message: 'Passwords don\'t match'
-    })
-  }
-  if (validatePassword(password)) {
+    password = req.body.password,
+    confirmpassword = req.body.confirmpassword;
+  if (validateForm(username, email, password, confirmpassword)) {
     return res.status(500).json({
       message: 'Password not valid',
-      errors: validatePassword(password)
+      errors: validateForm(username, email, password, confirmpassword)
     });
   }
   User.findOne({

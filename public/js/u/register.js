@@ -1,7 +1,7 @@
 $(document).ready(() => {
   $('#registerbtn').click(() => {
     $.ajax({
-      url: '/register',
+      url: '/u/register',
       method: 'POST',
       data: {
         username: $('#username').val(),
