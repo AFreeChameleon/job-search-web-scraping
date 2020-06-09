@@ -3,4 +3,6 @@ import * as jobController from '../controllers/job';
 export const router: Router = Router();
 
 //Routes
-router.get('/', jobController.GetSearchJobs);
+router.get('/result', jobController.GetResults);
+
+router.post('/search', jobController.PostSearchJobs);

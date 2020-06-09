@@ -2,13 +2,11 @@ import * as indeed from './indeedSearcher/index';
 import * as cwjobs from './cwjobsSearcher/index';
 import * as totaljobs from './totaljobsSearcher/index'
 
-export const searchAll = async () => {
+export const searchAll = async (jobTitle: string, location: string, radius: number) => {
   const jobIds = {
-    'indeed': await indeed.searchIndeed('Web Developer', 'Banbury'),
-    'cwjobs': await cwjobs.searchCwjobs('Web Developer', 'Banbury', 30),
-    'totaljobs': await totaljobs.searchTotaljobs('Web Developer', 'Banbury', 30)
+    'indeed': await indeed.searchIndeed(jobTitle, location),
+    'cwjobs': await cwjobs.searchCwjobs(jobTitle, location, radius),
+    'totaljobs': await totaljobs.searchTotaljobs(jobTitle, location, radius)
   }
   return jobIds;
 }
-
-console.log(searchAll());

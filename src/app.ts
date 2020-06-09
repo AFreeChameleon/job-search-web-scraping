@@ -4,10 +4,12 @@ import * as bodyParser from 'body-parser';
 import path from 'path';
 import { router as accountRouter } from './routes/account';
 import { router as homeRouter } from './routes/home'
+import { router as jobRouter } from './routes/job'
 import mongoose from 'mongoose';
 import session from 'express-session';
 import passport from 'passport';
 import passportFile from './passport/passport';
+
 passportFile(passport);
 //Initialising constants
 const app: Application = express();
@@ -33,6 +35,7 @@ app.set('views', path.join(__dirname, '/../views'));
 //Routes
 app.use('/', homeRouter);
 app.use('/u', accountRouter);
+app.use('/jobs', jobRouter);
 
 //Listening on port
 app.listen(PORT, () => console.log(`Account server running on port: ${PORT}`))

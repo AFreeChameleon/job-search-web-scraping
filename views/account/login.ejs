@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
-  <%- include('../templates/css.ejs') %>
+  <%- include('../templates/head.ejs') %>
   <link rel="stylesheet" href="/css/u/login.css">
 </head>
 <body>
   <div class="login-form">
-    <form action="/login" method="POST">
+    <form action="/u/login" method="POST">
       <div class="input-group">
         <input type="text" placeholder="Username" name="username" required/>
         <input type="password" placeholder="Password" name="password" required/>

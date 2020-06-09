@@ -8,12 +8,10 @@ router.get('/login', accountController.loggedIn, accountController.GetLogin);
 
 router.post('/login', passport.authenticate('local', {
   failureRedirect: '/login',
-  successRedirect: '/dashboard'
+  successRedirect: '/'
 }));
 
 router.get('/register', accountController.GetRegister);
 router.post('/register', accountController.PostRegister);
-
-router.get('/dashboard', accountController.loggedOut, accountController.GetDashboard);
 
 router.get('/logout', accountController.loggedOut, accountController.GetLogout);

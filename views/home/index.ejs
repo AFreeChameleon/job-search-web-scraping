@@ -15,5 +15,13 @@
   <div>
     Or login <a href="/u/login">here</a>
   </div>
+  <div class="search-jobs">
+    <form action="/jobs/search" method="POST">
+      <input type="text" placeholder="Job title, skill or company" name="jobTitle" required/>
+      <input type="text" placeholder="Town, city or postcode" name="location" required/>
+      <input type="number" placeholder="Radius (miles)" name="radius" required/>
+      <button type="submit">Search</button>
+    </form>
+  </div>
 </body>
 </html>

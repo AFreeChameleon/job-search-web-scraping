@@ -18,32 +18,23 @@ export function loggedIn(req: Request, res: Response, next: NextFunction) {
   return next();
 }
 
-function validatePassword(password: string) {
-  const errors = [];
-  if (password.length < 8) {
-      errors.push("Your password must be at least 8 characters"); 
-  }
-  if (password.search(/[a-z]/i) < 0) {
-      errors.push("Your password must contain at least one letter.");
-  }
-  if (password.search(/[0-9]/) < 0) {
-      errors.push("Your password must contain at least one digit."); 
-  }
-  if (errors.length > 0) {
-      return errors;
-  }
-  return false;
-}
-
 function validateForm(username: string, email: string, password: string, confirmpassword: string) {
   const errors: any = [];
   if (password !== confirmpassword) {
     errors.push('Passwords don\'t match.');
   }
-  if (username && email && password && confirmpassword) {
+  if (!(username && email && password && confirmpassword)) {
     errors.push('Please fill in empty fields.')
   }
-  errors.concat(validatePassword(password));
+  if (password.length < 8) {
+    errors.push("Your password must be at least 8 characters"); 
+  }
+  if (password.search(/[a-z]/i) < 0) {
+    errors.push("Your password must contain at least one letter.");
+  }
+  if (password.search(/[0-9]/) < 0) {
+    errors.push("Your password must contain at least one digit."); 
+  }
   return errors;
 }
 
@@ -55,23 +46,21 @@ export const GetRegister = (req: Request, res: Response) => {
   res.render('account/register');
 }
 
-export const PostLogin = (req: Request, res: Response) => {
-  res.redirect('/dashboard')
-}
-
 export const PostRegister = (req: Request, res: Response) => {
   const username = req.body.username,
     email = req.body.email,
     password = req.body.password,
     confirmpassword = req.body.confirmpassword;
-  if (validateForm(username, email, password, confirmpassword)) {
+  const formErrors = validateForm(username, email, password, confirmpassword)
+  console.log(formErrors);
+  if (formErrors.length > 0) {
     return res.status(500).json({
       message: 'Password not valid',
-      errors: validateForm(username, email, password, confirmpassword)
+      errors: formErrors
     });
   }
   User.findOne({
-    email: email
+    username: username,
   }, (err, data) => {
     if (err) {
       return res.status(500).json({
@@ -79,7 +68,7 @@ export const PostRegister = (req: Request, res: Response) => {
       })
     } else if (data) {
       return res.status(500).json({
-        message: 'User with that email already exists'
+        message: 'User with that username already exists'
       });
     } else {
       const record: any = new User();
@@ -104,9 +93,4 @@ export const PostRegister = (req: Request, res: Response) => {
 export const GetLogout = (req: Request, res: Response) => {
   req.logout();
   return res.redirect('/');
-}
-
-export const GetDashboard = (req: Request, res: Response) => {
-  console.log(req.user)
-  res.render('account/dashboard');
 }
