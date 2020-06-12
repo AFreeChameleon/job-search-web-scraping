@@ -31,7 +31,7 @@ const searchJobsById = async (jobIds: any[]) => {
           'id': jobIds[i].id,
           'jobTitle': $('h1.brand-font').text().trim(),
           'salary': $('.salary div').text().trim(),
-          'location': $('.location').text().trim(),
+          'location': $('.location').text().trim().replace('\n           ', ''),
           'type': $('.job-type div').text().trim(),
           'company': $('#companyJobsLink').text(),
           'timeListed': $('.date-posted').text().trim(),

@@ -1,8 +1,6 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
-import * as qs from 'querystring';
 import * as util from '../util/index';
-import fs from 'fs';
 
 export const searchIndeed = async (rawJobTitle: string, rawLocation: string) => {
   const jobTitle: string = util.indeedSpaceReplacer(rawJobTitle)
@@ -15,14 +13,14 @@ export const searchIndeed = async (rawJobTitle: string, rawLocation: string) => 
   })
   console.log('jobIds: ')
   console.log(jobIds)
-  const jobDetails = await searchJobsById(jobIds);
+  const jobDetails = searchJobsById(jobIds);
   return jobDetails;
 }
 
-const searchJobsById = (jobIds: string[]) => {
+const searchJobsById = async (jobIds: string[]) => {
   const jobDetails: any = [];
   for (let i = 0; i < jobIds.length; i++) {
-    return new Promise(next => {
+    await new Promise(next => {
       axios.get(`https://www.indeed.co.uk/viewjob?jk=${jobIds[i]}&from=vjs&vjs=1`)
       .then((res: any) => {
         jobDetails.push({
