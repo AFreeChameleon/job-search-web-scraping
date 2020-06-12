@@ -21,23 +21,26 @@ export const searchIndeed = async (rawJobTitle: string, rawLocation: string) => 
 
 const searchJobsById = (jobIds: string[]) => {
   const jobDetails: any = [];
-  jobIds.forEach(async (id: string) => {
-    axios.get(`https://www.indeed.co.uk/viewjob?jk=${id}&from=vjs&vjs=1`)
-    .then((res: any) => {
-      jobDetails.push({
-        'id': id,
-        'jobTitle': res.data.jobTitle,
-        'salary': res.data.ssT,
-        'location': res.data.jobLocationModel.jobLocation,
-        'type': res.data.jtsT,
-        'link': util.indeedJSONLinkFormatter(res.data.copyJobLink),
-        'company': res.data.sicm.cmN,
-        'timeListed': res.data.vfvm.jobAgeRelative
+  for (let i = 0; i < jobIds.length; i++) {
+    return new Promise(next => {
+      axios.get(`https://www.indeed.co.uk/viewjob?jk=${jobIds[i]}&from=vjs&vjs=1`)
+      .then((res: any) => {
+        jobDetails.push({
+          'id': jobIds[i],
+          'jobTitle': res.data.jobTitle,
+          'salary': res.data.ssT,
+          'location': res.data.jobLocationModel.jobLocation,
+          'type': res.data.jtsT,
+          'link': util.indeedJSONLinkFormatter(res.data.copyJobLink),
+          'company': res.data.sicm.cmN,
+          'timeListed': res.data.vfvm.jobAgeRelative
+        })
+        next();
+      })
+      .catch((err: any) => {
+        console.log(`Error at ${jobIds[i]}. Message: ${err.message}`)
       })
     })
-    .catch((err: any) => {
-      console.log(`error at ${id}: ${err.message}`)
-    })
-  });
+  }
   return jobDetails;
 }
