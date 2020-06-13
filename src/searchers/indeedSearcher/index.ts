@@ -31,7 +31,8 @@ const searchJobsById = async (jobIds: string[]) => {
           'type': res.data.jtsT,
           'link': util.indeedJSONLinkFormatter(res.data.copyJobLink),
           'company': res.data.sicm.cmN,
-          'timeListed': res.data.vfvm.jobAgeRelative
+          'timeListed': res.data.vfvm.jobAgeRelative,
+          'service': 'Indeed'
         })
         next();
       })

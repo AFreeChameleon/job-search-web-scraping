@@ -2,16 +2,18 @@ import { Request, Response, NextFunction } from "express";
 import * as search from '../searchers/searcher'
 
 export const GetResults = (req: Request, res: Response) => {
-  return res.render('jobs/search');
+  const jobTitle = (req.query as any).jobTitle,
+    location = (req.query as any).location,
+    radius = parseInt((req.query as any).radius);
+  return res.redirect(`/jobs/results?location=${location}&jobTitle=${jobTitle}&radius=${radius}`);
 }
 
-export const PostSearchJobs = async (req: Request, res: Response, next: NextFunction) => {
-  console.log(req.body)
-  const jobTitle = req.body.jobTitle,
-    location = req.body.location,
-    radius = parseInt(req.body.radius)
+export const GetSearchJobs = async (req: Request, res: Response, next: NextFunction) => {
+  const jobTitle = (req.query as any).jobTitle,
+    location = (req.query as any).location,
+    radius = parseInt((req.query as any).radius);
   const jobs: any = await search.searchAll(jobTitle, location, radius);
-  return res.status(200).json({
+  return res.render('jobs/results', {
     jobs: jobs
   });
 }

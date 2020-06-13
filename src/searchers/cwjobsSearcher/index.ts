@@ -29,13 +29,14 @@ const searchJobsById = async (jobIds: any[]) => {
         $ = cheerio.load(res.data);
         jobDetails.push({
           'id': jobIds[i].id,
-          'jobTitle': $('h1.brand-font').text().trim(),
+          'jobTitle': $('.col-page-header h1').text().trim(),
           'salary': $('.salary div').text().trim(),
           'location': $('.location').text().trim().replace('\n           ', ''),
           'type': $('.job-type div').text().trim(),
           'company': $('#companyJobsLink').text(),
           'timeListed': $('.date-posted').text().trim(),
-          'link': jobIds[i].link
+          'link': jobIds[i].link,
+          'service': 'CWJobs'
         })
         next();
       })
