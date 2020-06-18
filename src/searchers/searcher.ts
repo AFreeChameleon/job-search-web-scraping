@@ -17,9 +17,9 @@ export const searchJobPosting = async (service: string, id: string) => {
     case 'Indeed':
       indeed.searchJobContent(id);
     case 'CWJobs':
-      cwjobs.searchJobContent(id);
+      // cwjobs.searchJobContent(id);
     case 'TotalJobs':
-      totaljobs.searchJobContent(id);
+      // totaljobs.searchJobContent(id);
   }
 }
 
