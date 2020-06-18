@@ -43,3 +43,21 @@ const searchJobsById = async (jobIds: string[]) => {
   }
   return jobDetails;
 }
+
+export const searchJobContent = async (id: string) => {
+  let jobContent: any;
+  await new Promise(next => {
+    axios.get(`https://www.indeed.co.uk/jobs?q=test&l=Oxford&vjk=${id}`)
+      .then((res: any) => {
+        const $ = cheerio.load(res.data)
+        jobContent = {
+          description: $('#vjs-desc').text(),
+          originalPost: `https://indeed.co.uk/rc/clk?jk=${id}&amp;from=vj&amp;pos=twoPaneCopyLink`,
+          title: $('#vjs-jobtitle').text(),
+          company: $('#vjs-cn').text(),
+          type: $('.remote').text(),
+          listed: $('#info-link-row .date').text(),
+        }
+      })
+  })
+}

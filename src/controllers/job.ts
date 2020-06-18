@@ -17,3 +17,12 @@ export const GetSearchJobs = async (req: Request, res: Response, next: NextFunct
     jobs: jobs
   });
 }
+
+export const GetJobPosting = async (req: Request, res: Response) => {
+  const service = req.params.service,
+    id = req.params.id;
+  const jobContent: any = await search.searchJobPosting(service, id);
+  return res.render('jobs/jobpost', {
+    content: jobContent
+  });
+}

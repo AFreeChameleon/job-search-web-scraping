@@ -5,3 +5,4 @@ export const router: Router = Router();
 //Routes
 router.get('/search', jobController.GetResults);
 router.get('/results', jobController.GetSearchJobs);
+router.get('/:service/:id', jobController.GetJobPosting);

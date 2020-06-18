@@ -8,32 +8,49 @@
   <link rel="stylesheet" href="/css/jobs/results.css">
 </head>
 <body>
-  <div class="job-results">
-    <% for (let i = 0; i < jobs.length; i++) { %>
-      <div class="job-result">
-        <div class="job-header">
-          <div class="job-title"><%= jobs[i].jobTitle %></div>
-          <div class="job-service"><%= jobs[i].service %></div>
+  <div class="container">
+    <div class="search-container">
+      <form action="/jobs/search" method="GET">
+        <input type="text" class="search-title" placeholder="Job title or keywords" name="jobTitle" required/>
+        <input type="text" class="search-location" placeholder="Town, city or postcode" name="location" required/>
+        <select class="search-radius" placeholder="Radius (miles)" name="radius">
+          <option value="20">20 miles</option>
+          <option value="30">30 miles</option>
+          <option value="50">50 miles</option>
+          <option value="100">100 miles</option>
+        </select>
+        <div class="search-button">
+          <button type="submit">Search</button>
         </div>
-        <div class="job-row">
-          <div class="job-company"><%= jobs[i].company %></div>
-          <div class="job-type"><%= jobs[i].type %></div>
-        </div>
-        <div class="job-location"><%= jobs[i].location %></div>
-        <div class="job-save-remove-row">
-          <div class="job-save">Save</div>
-          <div class="job-remove">Remove</div>
-        </div>
-        <div class="job-salary"><%= jobs[i].salary %></div>
-        <div class="job-footer">
-          <div class="job-listed"><%= jobs[i].timeListed %></div>
-          <div class="job-apply">
-            <button>Apply</button>
+      </form>
+    </div>
+    <div class="job-results">
+      <% for (let i = 0; i < jobs.length; i++) { %>
+        <div class="job-result">
+          <div class="job-header">
+            <div class="job-title"><%= jobs[i].jobTitle %></div>
+            <div class="job-service"><%= jobs[i].service %></div>
+          </div>
+          <div class="job-row">
+            <div class="job-company"><%= jobs[i].company %></div>
+            <div class="job-type"><%= jobs[i].type %></div>
+          </div>
+          <div class="job-location"><%= jobs[i].location %></div>
+          <div class="job-save-remove-row">
+            <div class="job-save">Save</div>
+            <div class="job-remove">Remove</div>
+          </div>
+          <div class="job-salary"><%= jobs[i].salary %></div>
+          <div class="job-footer">
+            <div class="job-listed"><%= jobs[i].timeListed %></div>
+            <div class="job-apply">
+              <button class="job-apply-button" id="<%= jobs[i].id %>" data-service="<%= jobs[i].service %>">Apply</button>
+            </div>
           </div>
         </div>
-      </div>
-    <% } %>
+      <% } %>
+    </div>
   </div>
-
+  <script src="/js/jobs/results.js"></script>
 </body>
 </html>
