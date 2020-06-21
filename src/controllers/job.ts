@@ -21,8 +21,16 @@ export const GetSearchJobs = async (req: Request, res: Response, next: NextFunct
 export const GetJobPosting = async (req: Request, res: Response) => {
   const service = req.params.service,
     id = req.params.id;
-  // const jobContent: any = await search.searchJobPosting(service, id);
-  return res.render('jobs/jobpost', {
-    // content: jobContent
-  });
+  console.log(service)
+  console.log(id)
+  const jobContent: any = await search.searchJobPosting(service, id);
+  console.log(jobContent)
+  if (jobContent.error) {
+    console.log(jobContent.message);
+    return res.redirect('back')
+  } else {
+    return res.render('jobs/jobpost', {
+      content: jobContent
+    });
+  }
 }

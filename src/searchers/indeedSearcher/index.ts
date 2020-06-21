@@ -1,6 +1,7 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 import * as util from '../util/index';
+import * as fs from 'fs';
 
 export const searchIndeed = async (rawJobTitle: string, rawLocation: string) => {
   const jobTitle: string = util.indeedSpaceReplacer(rawJobTitle)
@@ -47,17 +48,29 @@ const searchJobsById = async (jobIds: string[]) => {
 export const searchJobContent = async (id: string) => {
   let jobContent: any;
   await new Promise(next => {
-    axios.get(`https://www.indeed.co.uk/jobs?q=test&l=Oxford&vjk=${id}`)
+    axios.get(`https://www.indeed.co.uk/viewjob?jk=${id}`)
       .then((res: any) => {
-        const $ = cheerio.load(res.data)
+        const $ = cheerio.load(res.data);
+        console.log($('.jobsearch-JobMetadataFooter').html()?.split('<'));
+        // fs.writeFileSync('./content.json', res.data)
         jobContent = {
-          description: $('#vjs-desc').text(),
+          description: $('#jobDescriptionText').html(),
           originalPost: `https://indeed.co.uk/rc/clk?jk=${id}&amp;from=vj&amp;pos=twoPaneCopyLink`,
-          title: $('#vjs-jobtitle').text(),
-          company: $('#vjs-cn').text(),
-          type: $('.remote').text(),
-          listed: $('#info-link-row .date').text(),
+          title: $('.jobsearch-JobInfoHeader-title').text(),
+          company: $('.jobsearch-CompanyInfoWithoutHeaderImage').text().trim(),
+          salary: $(''),
+          type: $('.icl-IconFunctional--jobs').parent(),
+          listed: $('.jobsearch-JobMetadataFooter').html()?.split('<')[0].replace(' - ', ''),
         }
+        next();
+      })
+      .catch((err: any) => {
+        jobContent = {
+          error: true,
+          message: err.message
+        }
+        next()
       })
   })
+  return jobContent;
 }

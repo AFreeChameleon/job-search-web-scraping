@@ -49,3 +49,32 @@ const searchJobsById = async (jobIds: any[]) => {
   console.log(jobDetails)
   return jobDetails;
 }
+
+export const searchJobContent = async (id: string) => {
+  let jobContent: any;
+  await new Promise(next => {
+    axios.get(`https://www.cwjobs.co.uk/job/${id}`)
+      .then((res: any) => {
+        const $ = cheerio.load(res.data);
+        jobContent = {
+          companyLogo: `https://www.cwjobs.co.uk/${$('.company-logo').attr('src')}`,
+          description: $('.job-description').html()?.trim(),
+          originalPost: undefined,
+          title: $('.title').text().trim(),
+          company: $('#companyJobsLink').text().trim(),
+          type: $('.job-type').text().trim(),
+          listed: $('.date-posted').text().trim()
+        }
+        console.log(res.data)
+        next()
+      })
+      .catch((err: any) => {
+        jobContent = {
+          error: true,
+          message: err.message
+        }
+        next()
+      })
+  })
+  return jobContent;
+}

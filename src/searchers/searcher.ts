@@ -13,14 +13,25 @@ export const searchAll = async (jobTitle: string, location: string, radius: numb
 }
 
 export const searchJobPosting = async (service: string, id: string) => {
+  let jobDetails: any;
   switch (service) {
     case 'Indeed':
-      indeed.searchJobContent(id);
+      jobDetails = indeed.searchJobContent(id);
+      break;
     case 'CWJobs':
-      // cwjobs.searchJobContent(id);
+      jobDetails = cwjobs.searchJobContent(id);
+      break;
     case 'TotalJobs':
-      // totaljobs.searchJobContent(id);
+      jobDetails = totaljobs.searchJobContent(id);
+      break;
+    default:
+      jobDetails = {
+        error: true,
+        message: 'Service does not match'
+      }
+      break;
   }
+  return jobDetails;
 }
 
 export const jobSorter = async () => {
