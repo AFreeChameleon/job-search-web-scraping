@@ -57,11 +57,15 @@ export const searchJobContent = async (id: string) => {
       .then((res: any) => {
         const $ = cheerio.load(res.data);
         jobContent = {
+          service: 'CWJobs',
           companyLogo: `https://www.cwjobs.co.uk/${$('.company-logo').attr('src')}`,
-          description: $('.job-description').html()?.trim(),
-          originalPost: undefined,
-          title: $('.title').text().trim(),
+          companyLink: `https://www.cwjobs.co.uk${$('#companyJobsLink').attr('href')}`,
+          description: $('.job-description').html()?.replace(new RegExp('</p>', 'g'), '</p><br>'),
+          originalPost: '#',
+          title: $('.col-page-header').text().trim(),
           company: $('#companyJobsLink').text().trim(),
+          location: $('.location').text().trim(),
+          salary: $('.salary').text().trim(),
           type: $('.job-type').text().trim(),
           listed: $('.date-posted').text().trim()
         }

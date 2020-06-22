@@ -1,0 +1,20 @@
+<div class="navbar-container">
+    <div class="navbar-form">
+        <form action="/jobs/search" method="GET">
+            <input type="text" class="navbar-search-title" placeholder="Job title or keywords" name="jobTitle" required/>
+            <input type="text" class="navbar-search-location" placeholder="Town, city or postcode" name="location" required/>
+            <select class="navbar-search-radius" placeholder="Radius (miles)" name="radius">
+              <option value="20">20 miles</option>
+              <option value="30">30 miles</option>
+              <option value="50">50 miles</option>
+              <option value="100">100 miles</option>
+            </select>
+            <div class="navbar-search-button">
+              <button type="submit">Search</button>
+            </div>
+        </form>
+        <div class="navbar-my-account">
+            <div class="navbar-my-account-title">My Account</div>
+        </div>
+    </div>
+</div>

@@ -51,15 +51,19 @@ export const searchJobContent = async (id: string) => {
     axios.get(`https://www.indeed.co.uk/viewjob?jk=${id}`)
       .then((res: any) => {
         const $ = cheerio.load(res.data);
-        console.log($('.jobsearch-JobMetadataFooter').html()?.split('<'));
+        // console.log($('.jobsearch-JobMetadataFooter').html()?.split('<'));
         // fs.writeFileSync('./content.json', res.data)
         jobContent = {
-          description: $('#jobDescriptionText').html(),
+          service: 'Indeed',
+          companyLogo: '#',
+          companyLink: '#',
+          description: $('#jobDescriptionText').html()?.replace(new RegExp('</p>', 'g'), '</p><br>'),
           originalPost: `https://indeed.co.uk/rc/clk?jk=${id}&amp;from=vj&amp;pos=twoPaneCopyLink`,
           title: $('.jobsearch-JobInfoHeader-title').text(),
           company: $('.jobsearch-CompanyInfoWithoutHeaderImage').text().trim(),
-          salary: $(''),
-          type: $('.icl-IconFunctional--jobs').parent(),
+          location: $('.icl-IconFunctional--location').next().text(),
+          salary: $('.icl-IconFunctional--salary').next().text(),
+          type: $('.icl-IconFunctional--jobs').next().text(),
           listed: $('.jobsearch-JobMetadataFooter').html()?.split('<')[0].replace(' - ', ''),
         }
         next();
@@ -71,6 +75,6 @@ export const searchJobContent = async (id: string) => {
         }
         next()
       })
-  })
+  });
   return jobContent;
 }
