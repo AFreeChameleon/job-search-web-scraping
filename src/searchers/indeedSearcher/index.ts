@@ -25,14 +25,14 @@ const searchJobsById = async (jobIds: string[]) => {
       axios.get(`https://www.indeed.co.uk/viewjob?jk=${jobIds[i]}&from=vjs&vjs=1`)
       .then((res: any) => {
         jobDetails.push({
-          'id': jobIds[i],
-          'jobTitle': res.data.jobTitle,
+          'job_id': jobIds[i],
+          'title': res.data.jobTitle,
           'salary': res.data.ssT,
           'location': res.data.jobLocationModel.jobLocation,
           'type': res.data.jtsT,
           'link': util.indeedJSONLinkFormatter(res.data.copyJobLink),
           'company': res.data.sicm.cmN,
-          'timeListed': res.data.vfvm.jobAgeRelative,
+          'listed': res.data.vfvm.jobAgeRelative,
           'service': 'Indeed'
         })
         next();
@@ -51,8 +51,6 @@ export const searchJobContent = async (id: string) => {
     axios.get(`https://www.indeed.co.uk/viewjob?jk=${id}`)
       .then((res: any) => {
         const $ = cheerio.load(res.data);
-        // console.log($('.jobsearch-JobMetadataFooter').html()?.split('<'));
-        // fs.writeFileSync('./content.json', res.data)
         jobContent = {
           service: 'Indeed',
           companyLogo: '#',
@@ -62,7 +60,7 @@ export const searchJobContent = async (id: string) => {
           title: $('.jobsearch-JobInfoHeader-title').text(),
           company: $('.jobsearch-CompanyInfoWithoutHeaderImage').text().trim(),
           location: $('.icl-IconFunctional--location').next().text(),
-          salary: $('.icl-IconFunctional--salary').next().text(),
+          salary: $('.icl-IconFunctional--salary').html(),
           type: $('.icl-IconFunctional--jobs').next().text(),
           listed: $('.jobsearch-JobMetadataFooter').html()?.split('<')[0].replace(' - ', ''),
         }

@@ -11,14 +11,14 @@
   <%- include('../templates/navbar') %>
   <div class="container">
     <div class="search-title">
-      Results for <%= jobTitle %> near <%= location %>:
+      Results for <%= title %> near <%= location %>:
     </div>
     <% if (jobs.length > 0) { %>
     <div class="job-results">
       <% for (let i = 0; i < jobs.length; i++) { %>
         <div class="job-result">
           <div class="job-header">
-            <div class="job-title"><%= jobs[i].jobTitle %></div>
+            <div class="job-title"><%= jobs[i].title %></div>
             <div class="job-service"><%= jobs[i].service %></div>
           </div>
           <div class="job-row">
@@ -32,9 +32,9 @@
           </div>
           <div class="job-salary"><%= jobs[i].salary %></div>
           <div class="job-footer">
-            <div class="job-listed"><%= jobs[i].timeListed %></div>
+            <div class="job-listed"><%= jobs[i].listed %></div>
             <div class="job-apply">
-              <button class="job-apply-button" id="<%= jobs[i].id %>" data-service="<%= jobs[i].service %>">Apply</button>
+              <button class="job-apply-button" id="<%= jobs[i].job_id %>" data-service="<%= jobs[i].service %>">Apply</button>
             </div>
           </div>
         </div>

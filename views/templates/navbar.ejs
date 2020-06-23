@@ -1,7 +1,7 @@
 <div class="navbar-container">
     <div class="navbar-form">
         <form action="/jobs/search" method="GET">
-            <input type="text" class="navbar-search-title" placeholder="Job title or keywords" name="jobTitle" value="<%= jobTitle ? jobTitle : '' %>" required/>
+            <input type="text" class="navbar-search-title" placeholder="Job title or keywords" name="jobTitle" value="<%= title ? title : '' %>" required/>
             <input type="text" class="navbar-search-location" placeholder="Town, city or postcode" name="location" value="<%= location ? location : '' %>" required/>
             <select class="navbar-search-radius" placeholder="Radius (miles)" name="radius">
               <option value="20" <%= radius == '20' ? 'selected' : '' %> >20 miles</option>

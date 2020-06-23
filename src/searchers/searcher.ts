@@ -9,7 +9,7 @@ export const searchAll = async (jobTitle: string, location: string, radius: numb
     await cwjobs.searchCwjobs(jobTitle, location, radius)).concat(
     await totaljobs.searchTotaljobs(jobTitle, location, radius)
   )
-  return jobs;
+  return jobRandomiser(jobs);
 }
 
 export const searchJobPosting = async (service: string, id: string) => {
@@ -34,6 +34,12 @@ export const searchJobPosting = async (service: string, id: string) => {
   return jobDetails;
 }
 
-export const jobSorter = async () => {
-  
+export const jobRandomiser = async (jobList: any[]) => {
+  for(let i = jobList.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * i)
+    const temp = jobList[i]
+    jobList[i] = jobList[j]
+    jobList[j] = temp
+  }
+  return jobList;
 }

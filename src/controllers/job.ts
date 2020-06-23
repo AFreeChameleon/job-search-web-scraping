@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as search from '../searchers/searcher'
+import * as jobFunctions from '../db/jobFunctions';
 
 export const GetResults = (req: Request, res: Response) => {
   const jobTitle = (req.query as any).jobTitle,
@@ -12,14 +13,15 @@ export const GetSearchJobs = async (req: Request, res: Response, next: NextFunct
   const jobTitle = (req.query as any).jobTitle,
     location = (req.query as any).location,
     radius = parseInt((req.query as any).radius);
-  // const jobs: any = await search.searchAll(jobTitle, location, radius);
-  const jobs: any = [];
-  return res.render('jobs/results', {
-    jobTitle,
+  const jobs: any = await search.searchAll(jobTitle, location, radius);
+  // const jobs: any = [];
+  res.render('jobs/results', {
+    title: jobTitle,
     location,
     radius,
     jobs: jobs
   });
+  jobFunctions.addToDB(jobs);
 }
 
 export const GetJobPosting = async (req: Request, res: Response) => {
