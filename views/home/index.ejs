@@ -4,24 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home</title>
+  <%- include('../templates/head') %>
+  <link rel="stylesheet" href="/css/home/index.css">
 </head>
 <body>
-  <div>
-    This is a website that collects job postings from multiple websites and puts them all here for your use
-  </div> 
-  <div>
-    Click <a href="/u/register">here</a> to get started!
-  </div>
-  <div>
-    Or login <a href="/u/login">here</a>
-  </div>
-  <div class="search-jobs">
-    <form action="/jobs/search" method="GET">
-      <input type="text" placeholder="Job title, skill or company" name="jobTitle" required/>
-      <input type="text" placeholder="Town, city or postcode" name="location" required/>
-      <input type="number" placeholder="Radius (miles)" name="radius" required/>
-      <button type="submit">Search</button>
-    </form>
+  <%- include('../templates/navbar') %>
+  <div class="hero-container">
+    <div class="hero-title">
+      This is a website that collects job postings from multiple websites and puts them all here for your use
+    </div>
+    <div class="search-jobs">
+      <form action="/jobs/search" method="GET">
+        <input type="text" class="search-title" placeholder="Job title or keywords" name="jobTitle" required/>
+        <input type="text" class="search-location" placeholder="Town, city or postcode" name="location" required/>
+        <select class="search-radius" placeholder="Radius (miles)" name="radius">
+          <option value="20">20 miles</option>
+          <option value="30">30 miles</option>
+          <option value="50">50 miles</option>
+          <option value="100">100 miles</option>
+        </select>
+        <div class="search-button">
+          <button type="submit">Search</button>
+        </div>
+      </form>
+    </div>
   </div>
 </body>
 </html>

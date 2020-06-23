@@ -12,8 +12,12 @@ export const GetSearchJobs = async (req: Request, res: Response, next: NextFunct
   const jobTitle = (req.query as any).jobTitle,
     location = (req.query as any).location,
     radius = parseInt((req.query as any).radius);
-  const jobs: any = await search.searchAll(jobTitle, location, radius);
+  // const jobs: any = await search.searchAll(jobTitle, location, radius);
+  const jobs: any = [];
   return res.render('jobs/results', {
+    jobTitle,
+    location,
+    radius,
     jobs: jobs
   });
 }
@@ -30,7 +34,10 @@ export const GetJobPosting = async (req: Request, res: Response) => {
     return res.redirect('back')
   } else {
     return res.render('jobs/jobpost', {
-      content: jobContent
+      content: jobContent,
+      jobTitle: '',
+      location: '',
+      radius: ''
     });
   }
 }

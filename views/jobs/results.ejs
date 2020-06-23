@@ -10,6 +10,10 @@
 <body>
   <%- include('../templates/navbar') %>
   <div class="container">
+    <div class="search-title">
+      Results for <%= jobTitle %> near <%= location %>:
+    </div>
+    <% if (jobs.length > 0) { %>
     <div class="job-results">
       <% for (let i = 0; i < jobs.length; i++) { %>
         <div class="job-result">
@@ -36,6 +40,11 @@
         </div>
       <% } %>
     </div>
+    <% } else { %>
+      <div class="no-results">
+        No results found.
+      </div>
+    <% } %>
   </div>
   <script src="/js/jobs/results.js"></script>
 </body>
