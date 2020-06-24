@@ -35,6 +35,22 @@ const jobSchema = new schema({
     listed: {
         type: String,
         required: true
+    },
+    description: {
+        type: String,
+        required: false
+    },
+    companyLogo: {
+        type: String,
+        required: false
+    },
+    companyLink: {
+        type: String,
+        required: false
+    },
+    originalPost: {
+        type: String,
+        required: false
     }
 });
 

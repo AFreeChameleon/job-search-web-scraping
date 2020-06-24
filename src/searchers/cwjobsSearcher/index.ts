@@ -1,6 +1,7 @@
 import axios from 'axios';
 import cheerio from 'cheerio'
 import * as util from '../util/index';
+import * as jobFunctions from '../../db/jobFunctions';
 
 export const searchCwjobs = async (rawJobTitle: string, rawLocation: string, rawRadius: number) => {
   const jobTitle = util.cwjobsSpaceReplacer(rawJobTitle);
@@ -30,11 +31,11 @@ const searchJobsById = async (jobIds: any[]) => {
         jobDetails.push({
           'job_id': jobIds[i].id,
           'title': $('.col-page-header h1').text().trim(),
-          'salary': $('.salary div').text().trim(),
-          'location': $('.location').text().trim().replace('\n           ', ''),
-          'type': $('.job-type div').text().trim(),
-          'company': $('#companyJobsLink').text(),
-          'listed': $('.date-posted').text().trim(),
+          'salary': $('.salary div').text().trim() === '' ? 'Not Specified' : $('.salary div').text().trim(),
+          'location': $('.location').text().trim().replace('\n           ', '') === '' ? 'Not Specified' : $('.location').text().trim().replace('\n           ', ''),
+          'type': $('.job-type div').text().trim() === '' ? 'Not Specified' : $('.job-type div').text().trim(),
+          'company': $('#companyJobsLink').text() === '' ? 'Not Specified' : $('#companyJobsLink').text(),
+          'listed': $('.date-posted').text().trim() === '' ? 'Not Specified' : $('.date-posted').text().trim(),
           'link': jobIds[i].link,
           'service': 'CWJobs'
         })
@@ -45,40 +46,52 @@ const searchJobsById = async (jobIds: any[]) => {
       })
     })
   }
-  console.log('job details')
-  console.log(jobDetails)
+  // console.log('job details')
+  // console.log(jobDetails)
   return jobDetails;
 }
 
 export const searchJobContent = async (id: string) => {
   let jobContent: any;
-  await new Promise(next => {
-    axios.get(`https://www.cwjobs.co.uk/job/${id}`)
-      .then((res: any) => {
-        const $ = cheerio.load(res.data);
-        jobContent = {
-          service: 'CWJobs',
-          companyLogo: `https://www.cwjobs.co.uk/${$('.company-logo').attr('src')}`,
-          companyLink: `https://www.cwjobs.co.uk${$('#companyJobsLink').attr('href')}`,
-          description: $('.job-description').html()?.replace(new RegExp('</p>', 'g'), '</p><br>'),
-          originalPost: '#',
-          title: $('.col-page-header').text().trim(),
-          company: $('#companyJobsLink').text().trim(),
-          location: $('.location').text().trim(),
-          salary: $('.salary').text().trim(),
-          type: $('.job-type').text().trim(),
-          listed: $('.date-posted').text().trim()
-        }
-        console.log(res.data)
-        next()
-      })
-      .catch((err: any) => {
-        jobContent = {
-          error: true,
-          message: err.message
-        }
-        next()
-      })
-  })
-  return jobContent;
+  const DBJobRecord: any = await jobFunctions.FindJobByJobId(id, 'CWJobs');
+  if (DBJobRecord.description == null) {
+    await new Promise(next => {
+      axios.get(`https://www.cwjobs.co.uk/job/${id}`)
+        .then((res: any) => {
+          const $ = cheerio.load(res.data);
+          jobContent = {
+            job_id: DBJobRecord.job_id,
+            service: DBJobRecord.service,
+            companyLogo: `https://www.cwjobs.co.uk/${$('.company-logo').attr('src')}`,
+            companyLink: `https://www.cwjobs.co.uk${$('#companyJobsLink').attr('href')}`,
+            description: $('.job-description').html()?.replace(new RegExp('</p>', 'g'), '</p><br>'),
+            originalPost: '#',
+            // title: $('.col-page-header').text().trim(),
+            title: DBJobRecord.title,
+            // company: $('#companyJobsLink').text().trim(),
+            company: DBJobRecord.company,
+            // location: $('.location').text().trim(),
+            location: DBJobRecord.location,
+            // salary: $('.salary').text().trim(),
+            salary: DBJobRecord.salary,
+            // type: $('.job-type').text().trim(),
+            type: DBJobRecord.type,
+            // listed: $('.date-posted').text().trim()
+            listed: DBJobRecord.listed
+          }
+          next()
+        })
+        .catch((err: any) => {
+          jobContent = {
+            error: true,
+            message: err.message
+          }
+          next()
+        })
+    });
+    jobFunctions.UpdateJob(jobContent);
+    return jobContent;
+  } else {
+    return DBJobRecord;
+  }
 }

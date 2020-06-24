@@ -2,6 +2,7 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 import * as util from '../util/index';
 import * as fs from 'fs';
+import * as jobFunctions from '../../db/jobFunctions';
 
 export const searchIndeed = async (rawJobTitle: string, rawLocation: string) => {
   const jobTitle: string = util.indeedSpaceReplacer(rawJobTitle)
@@ -47,32 +48,46 @@ const searchJobsById = async (jobIds: string[]) => {
 
 export const searchJobContent = async (id: string) => {
   let jobContent: any;
-  await new Promise(next => {
-    axios.get(`https://www.indeed.co.uk/viewjob?jk=${id}`)
-      .then((res: any) => {
-        const $ = cheerio.load(res.data);
-        jobContent = {
-          service: 'Indeed',
-          companyLogo: '#',
-          companyLink: '#',
-          description: $('#jobDescriptionText').html()?.replace(new RegExp('</p>', 'g'), '</p><br>'),
-          originalPost: `https://indeed.co.uk/rc/clk?jk=${id}&amp;from=vj&amp;pos=twoPaneCopyLink`,
-          title: $('.jobsearch-JobInfoHeader-title').text(),
-          company: $('.jobsearch-CompanyInfoWithoutHeaderImage').text().trim(),
-          location: $('.icl-IconFunctional--location').next().text(),
-          salary: $('.icl-IconFunctional--salary').html(),
-          type: $('.icl-IconFunctional--jobs').next().text(),
-          listed: $('.jobsearch-JobMetadataFooter').html()?.split('<')[0].replace(' - ', ''),
-        }
-        next();
-      })
-      .catch((err: any) => {
-        jobContent = {
-          error: true,
-          message: err.message
-        }
-        next()
-      })
-  });
-  return jobContent;
+  const DBJobRecord: any = await jobFunctions.FindJobByJobId(id, 'Indeed');
+  if (DBJobRecord.description == null) {
+    await new Promise(next => {
+      axios.get(`https://www.indeed.co.uk/viewjob?jk=${id}`)
+        .then((res: any) => {
+          const $ = cheerio.load(res.data);
+          jobContent = {
+            // service: 'Indeed',
+            job_id: DBJobRecord.job_id,
+            service: DBJobRecord.service,
+            companyLogo: '#',
+            companyLink: '#',
+            description: $('#jobDescriptionText').html()?.replace(new RegExp('</p>', 'g'), '</p><br>'),
+            originalPost: `https://indeed.co.uk/rc/clk?jk=${id}&amp;from=vj&amp;pos=twoPaneCopyLink`,
+            // title: $('.jobsearch-JobInfoHeader-title').text(),
+            title: DBJobRecord.title,
+            // company: $('.jobsearch-CompanyInfoWithoutHeaderImage').text().trim(),
+            company: DBJobRecord.company,
+            // location: $('.icl-IconFunctional--location').next().text(),
+            location: DBJobRecord.location,
+            // salary: $('.icl-IconFunctional--salary').html(),
+            salary: DBJobRecord.salary,
+            // type: $('.icl-IconFunctional--jobs').next().text(),
+            type: DBJobRecord.type,
+            // listed: $('.jobsearch-JobMetadataFooter').html()?.split('<')[0].replace(' - ', ''),
+            listed: DBJobRecord.listed
+          }
+          next();
+        })
+        .catch((err: any) => {
+          jobContent = {
+            error: true,
+            message: err.message
+          }
+          next()
+        })
+    });
+    jobFunctions.UpdateJob(jobContent);
+    return jobContent;
+  } else {
+    return DBJobRecord;
+  }
 }
