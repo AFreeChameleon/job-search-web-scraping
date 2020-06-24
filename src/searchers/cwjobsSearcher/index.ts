@@ -65,7 +65,7 @@ export const searchJobContent = async (id: string) => {
             companyLogo: `https://www.cwjobs.co.uk/${$('.company-logo').attr('src')}`,
             companyLink: `https://www.cwjobs.co.uk${$('#companyJobsLink').attr('href')}`,
             description: $('.job-description').html()?.replace(new RegExp('</p>', 'g'), '</p><br>'),
-            originalPost: '#',
+            originalPost: `https://www.cwjobs.co.uk/job/${id}/apply`,
             // title: $('.col-page-header').text().trim(),
             title: DBJobRecord.title,
             // company: $('#companyJobsLink').text().trim(),

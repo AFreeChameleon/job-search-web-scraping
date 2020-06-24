@@ -16,7 +16,7 @@
     <% if (jobs.length > 0) { %>
     <div class="job-results">
       <% for (let i = 0; i < jobs.length; i++) { %>
-        <div class="job-result">
+        <div class="job-result" onclick="window.location.href = '/jobs/<%= jobs[i].service %>/<%= jobs[i].job_id %>'">
           <div class="job-header">
             <div class="job-title"><%= jobs[i].title %></div>
             <div class="job-service"><%= jobs[i].service %></div>
@@ -34,7 +34,7 @@
           <div class="job-footer">
             <div class="job-listed"><%= jobs[i].listed %></div>
             <div class="job-apply">
-              <button class="job-apply-button" id="<%= jobs[i].job_id %>" data-service="<%= jobs[i].service %>">Apply</button>
+              <!-- <button class="job-apply-button" id="<%= jobs[i].job_id %>" data-service="<%= jobs[i].service %>">Apply</button> -->
             </div>
           </div>
         </div>

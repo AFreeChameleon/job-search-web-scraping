@@ -64,7 +64,7 @@ export const searchJobContent = async (id: string) => {
             companyLogo: `https://www.totaljobs.com/${$('.company-logo').attr('src')}`,
             companyLink: `https://www.totaljobs.com${$('#companyJobsLink').attr('href')}`,
             description: $('.job-description').html()?.trim(),
-            originalPost: '#',
+            originalPost: `https://www.totaljobs.com/job/${id}/apply`,
             // title: $('.col-page-header').text().trim(),
             title: DBJobRecord.title,
             // company: $('#companyJobsLink').text().trim(),
